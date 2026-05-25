@@ -14,6 +14,7 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@tanstack/react-query": "^5.100.13",
+    "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "formik": "^2.4.9",
     "framer-motion": "^12.40.0",

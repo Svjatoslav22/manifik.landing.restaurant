@@ -52,6 +52,7 @@ const galleryImages = [
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>('All');
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -61,6 +62,10 @@ export default function Gallery() {
 
   const filteredImages =
     filter === 'All' ? galleryImages : galleryImages.filter((img) => img.category === filter);
+
+  const markImageAsFailed = (src: string) => {
+    setFailedImages((prev) => (prev[src] ? prev : { ...prev, [src]: true }));
+  };
 
   const openLightbox = (index: number) => setSelectedImage(index);
   const closeLightbox = () => setSelectedImage(null);
@@ -131,13 +136,20 @@ export default function Gallery() {
               className="relative aspect-square rounded-xl overflow-hidden cursor-pointer group"
               onClick={() => openLightbox(index)}
             >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-              />
+              {failedImages[image.src] ? (
+                <div className="h-full w-full bg-linear-to-br from-charcoal-700 to-charcoal-600 flex items-center justify-center">
+                  <span className="text-sm uppercase tracking-[0.2em] text-gray-300/80">{image.alt}</span>
+                </div>
+              ) : (
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={() => markImageAsFailed(image.src)}
+                />
+              )}
               <div className="absolute inset-0 bg-charcoal-900/0 group-hover:bg-charcoal-900/50 transition-all duration-300 flex items-center justify-center">
                 <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">
                   {image.alt}
@@ -193,13 +205,20 @@ export default function Gallery() {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-5xl flex items-center justify-center"
             >
-              <Image
-                src={filteredImages[selectedImage].src}
-                alt={filteredImages[selectedImage].alt}
-                width={1600}
-                height={1200}
-                className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-lg"
-              />
+              {failedImages[filteredImages[selectedImage].src] ? (
+                <div className="w-full max-w-5xl h-[60vh] bg-linear-to-br from-charcoal-700 to-charcoal-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-lg font-medium">{filteredImages[selectedImage].alt}</span>
+                </div>
+              ) : (
+                <Image
+                  src={filteredImages[selectedImage].src}
+                  alt={filteredImages[selectedImage].alt}
+                  width={1600}
+                  height={1200}
+                  className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-lg"
+                  onError={() => markImageAsFailed(filteredImages[selectedImage].src)}
+                />
+              )}
             </motion.div>
           </motion.div>
         )}

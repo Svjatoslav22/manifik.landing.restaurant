@@ -5,6 +5,9 @@ import MenuItem from './models/MenuItem';
 import Order from './models/Order';
 import Reservation from './models/Reservation';
 import Review from './models/Review';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
 
 const fastify = Fastify({ logger: true });
 
