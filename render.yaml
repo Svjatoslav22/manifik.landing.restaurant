@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: manifik-backend
+    env: node
+    branch: main
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm run server
+    plan: free
+    repo: Svjatoslav22/manifik.landing.restaurant
+    instances:
+      type: auto
+    healthCheckPath: /api/menu

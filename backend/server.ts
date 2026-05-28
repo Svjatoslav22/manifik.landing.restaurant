@@ -11,9 +11,19 @@ dotenv.config({ path: '.env.local' });
 
 const fastify = Fastify({ logger: true });
 
-// Register CORS
+// Register CORS (allow localhost and optional FRONTEND_URL from env)
+const allowedOrigins: string[] = ['http://localhost:3000', 'http://localhost:3001'];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 fastify.register(cors, {
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: (origin, cb) => {
+    // Allow requests with no origin (e.g. server-to-server, curl)
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'), false);
+  },
   credentials: true,
 });
 
@@ -43,7 +53,7 @@ fastify.get('/api/menu', async (request, reply) => {
       MenuItem.find(query).sort({ category: 1, name: 1 }).skip(skip).limit(limitNum),
       MenuItem.countDocuments(query),
     ]);
-
+ 
     return {
       items,
       pagination: {
