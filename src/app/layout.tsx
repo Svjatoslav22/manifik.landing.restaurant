@@ -14,11 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Manifik Restaurant | Modern European Cuisine in Sambir",
+  title: "Manifik Restaurant",
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
   description: "Experience exquisite European cuisine at Manifik Restaurant in Sambir. Fine dining, elegant atmosphere, and exceptional service. Reserve your table today.",
   keywords: ["restaurant", "European cuisine", "Sambir", "fine dining", "Manifik", "Ukraine"],
   openGraph: {
-    title: "Manifik Restaurant | Modern European Cuisine",
+    title: "Manifik Restaurant",
     description: "Experience exquisite European cuisine in an elegant atmosphere where every dish tells a story.",
     type: "website",
     locale: "en_US",
