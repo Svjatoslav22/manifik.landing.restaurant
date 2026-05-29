@@ -204,12 +204,13 @@ fastify.post('/api/reviews', async (request, reply) => {
   }
 });
 
-// Seed data endpoint (for development)
-fastify.post('/api/seed', async (request, reply) => {
-  try {
-    await MenuItem.deleteMany({});
+// Seed data endpoint (for development only)
+if (process.env.NODE_ENV !== 'production') {
+  fastify.post('/api/seed', async (request, reply) => {
+    try {
+      await MenuItem.deleteMany({});
 
-    const menuItems = [
+      const menuItems = [
       // Starters
       {
         name: 'Tartare from Salmon',
@@ -417,13 +418,14 @@ fastify.post('/api/seed', async (request, reply) => {
       },
     ];
 
-    await MenuItem.insertMany(menuItems);
-    reply.send({ message: 'Database seeded successfully', count: menuItems.length });
-  } catch (err) {
-    fastify.log.error(err);
-    reply.status(500).send({ error: 'Failed to seed database' });
-  }
-});
+      await MenuItem.insertMany(menuItems);
+      reply.send({ message: 'Database seeded successfully', count: menuItems.length });
+    } catch (err) {
+      fastify.log.error(err);
+      reply.status(500).send({ error: 'Failed to seed database' });
+    }
+  });
+}
 
 // Start server
 const start = async () => {
