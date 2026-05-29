@@ -9,7 +9,7 @@
     "lint": "eslint",
     "server": "npx tsx backend/server.ts",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
-    "seed": "curl -X POST http://localhost:3001/api/seed"
+    "seed": "npx tsx backend/scripts/seed.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
